@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://via.placeholder.com/1920x1080?text=IMS Engineering college') no-repeat center center fixed;
+           
+            background-size: cover;
+            color: #f6f6f9;
+            
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+
+            border-bottom: 2px solid #007bff;
+           
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+            
+        }
+        .btn-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .btn-section button {
+            margin: 10px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+        }
+        .card {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .list-group-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffffff;
+        }
+        input.form-control {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid #007bff;
+            color: #ffffff;
+        }
+        input.form-control::placeholder {
+            color: #cccccc;
+        }
+        table {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #007bff;
+        }
+        th {
+            background-color: #007bff;
+        }
+        .content-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .active-section {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-center w-100">
+                <a class="navbar-brand" href="#">CSE Dashboard</a>
+            </div>
+            
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="btn-section">
+            <button class="btn btn-primary" onclick="showSection('timetable')">Time Table Generator</button>
+            <button class="btn btn-secondary" onclick="showSection('quora')">Q&A Platform</button>
+            <button class="btn btn-success" onclick="showSection('chatbot')">Chatbot</button>
+            <button class="btn btn-info" onclick="showSection('events')">Events</button>
+        </div>
+
+        <div id="timetable" class="content-section">
+            <h2>Time Table Generator</h2>
+            <div id="timetable-app"></div>
+        </div>
+
+        <div id="quora" class="content-section">
+            <h2>Q&A Platform</h2>
+            <div id="quora-app"></div>
+        </div>
+
+        <div id="chatbot" class="content-section">
+            <h2>Chatbot</h2>
+            <div id="chatbot-app"></div>
+        </div>
+
+        <div id="events" class="content-section">
+            <h2>Ongoing and Upcoming Events</h2>
+            <div id="events-app"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+       function TimeTable() {
+    const [teachers, setTeachers] = React.useState([{ name: "", day: "", time: "" }]);
+    const [timeTable, setTimeTable] = React.useState([]);
+
+    const handleInputChange = (index, field, value) => {
+        const updatedTeachers = [...teachers];
+        updatedTeachers[index][field] = value;
+        setTeachers(updatedTeachers);
+    };
+
+    const addTeacherInput = () => {
+        setTeachers([...teachers, { name: "", day: "", time: "" }]);
+    };
+
+    const generateTimeTable = () => {
+        // Simulate the generation of the timetable
+        const generatedTable = teachers.map((teacher, index) => ({
+            day: teacher.day,
+            time: teacher.time,
+            teacher: teacher.name,
+        }));
+        setTimeTable(generatedTable);
+    };
+
+    return (
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Time Table Generator</h5>
+                <div>
+                    {teachers.map((teacher, index) => (
+                        <div className="mb-3" key={index}>
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Teacher's Name"
+                                value={teacher.name}
+                                onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Day (e.g., Monday)"
+                                value={teacher.day}
+                                onChange={(e) => handleInputChange(index, "day", e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Time (e.g., 10:00 AM)"
+                                value={teacher.time}
+                                onChange={(e) => handleInputChange(index, "time", e.target.value)}
+                            />
+                        </div>
+                    ))}
+                    <button className="btn btn-secondary mb-3" onClick={addTeacherInput}>
+                        Add More
+                    </button>
+                    <button className="btn btn-primary" onClick={generateTimeTable}>
+                        Generate Time Table
+                    </button>
+                </div>
+                {timeTable.length > 0 && (
+                    <div>
+                        <h5 className="mt-4">Generated Time Table</h5>
+                        <table className="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Time</th>
+                                    <th>Teacher</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {timeTable.map((entry, index) => (
+                                    <tr key={index}>
+                                        <td>{entry.day}</td>
+                                        <td>{entry.time}</td>
+                                        <td>{entry.teacher}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+       }
+
+
+
+        function QnAPlatform() {
+            const [questions, setQuestions] = React.useState([
+                { id: 1, question: "What are the library hours?", answer: "The library is open from 8 AM to 8 PM on weekdays." },
+                { id: 2, question: "How can I register for the upcoming hackathon?", answer: "You can register through the college portal under the Events section." }
+            ]);
+            const [newQuestion, setNewQuestion] = React.useState("");
+
+            const handleAskQuestion = () => {
+                if (newQuestion.trim() !== "") {
+                    setQuestions([...questions, { id: questions.length + 1, question: newQuestion, answer: "Answer coming soon..." }]);
+                    setNewQuestion("");
+                }
+            };
+
+            return (
+                <div className="card">
+                    <div className="card-body">
+                        <ul className="list-group">
+                            {questions.map((q) => (
+                                <li key={q.id} className="list-group-item">
+                                    <strong>Q:</strong> {q.question} <br />
+                                    <strong>A:</strong> {q.answer}
+                                </li>
+                            ))}
+                        </ul>
+                        <input
+                            type="text"
+                            className="form-control mt-3"
+                            placeholder="Ask a new question..."
+                            value={newQuestion}
+                            onChange={(e) => setNewQuestion(e.target.value)}
+                        />
+                        <button className="btn btn-secondary mt-2" onClick={handleAskQuestion}>Ask</button>
+                    </div>
+                </div>
+            );
+        }
+
+        function Chatbot() {
+            const [messages, setMessages] = React.useState([]);
+            const [input, setInput] = React.useState("");
+
+            const handleSendMessage = () => {
+                if (input.trim() !== "") {
+                    let response;
+                    if (input.toLowerCase().includes("events")) {
+                        response = "You can find all upcoming events in the Events section of the dashboard.";
+                    } else if (input.toLowerCase().includes("canteen")) {
+                        response = "The canteen serves food from 9 AM to 6 PM.";
+                    } else if (input.toLowerCase().includes("courses")) {
+                        response = "You can view your courses and syllabus on the college portal.";
+                    } else {
+                        response = "I'm not sure about that. Please check the college website or contact admin.";
+                    }
+
+                    const newMessages = [...messages, { sender: "User", text: input }, { sender: "Bot", text: response }];
+                    setMessages(newMessages);
+                    setInput("");
+                }
+            };
+
+            return (
+                <div className="card">
+                    <div className="card-body">
+                        <div style={{ maxHeight: "200px", overflowY: "auto", marginBottom: "10px" }}>
+                            {messages.map((msg, index) => (
+                                <div key={index}>
+                                    <strong>{msg.sender}:</strong> {msg.text}
+                                </div>
+                            ))}
+                        </div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Type your message..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <button className="btn btn-success mt-2" onClick={handleSendMessage}>Send</button>
+                    </div>
+                </div>
+            );
+        }
+
+        function Events() {
+            const events = [
+                { id: 1, name: "Hackathon", date: "2024-01-15" },
+                { id: 2, name: "Cultural Fest", date: "2024-02-20" }
+            ];
+
+            return (
+                <div className="card">
+                    <div className="card-body">
+                        <ul className="list-group">
+                            {events.map((event) => (
+                                <li key={event.id} className="list-group-item">
+                                    {event.name} - {event.date}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.render(<TimeTable />, document.getElementById('timetable-app'));
+        ReactDOM.render(<QnAPlatform />, document.getElementById('quora-app'));
+        ReactDOM.render(<Chatbot />, document.getElementById('chatbot-app'));
+        ReactDOM.render(<Events />, document.getElementById('events-app'));
+    </script>
+    <script>
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            document.getElementById(sectionId).classList.add('active-section');
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

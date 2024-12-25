@@ -1,0 +1,85 @@
+/* Center the 'IMS Engineering College' text in blue */
+.text-blue {
+    color: blue;
+}
+
+/* Background image for the body */
+body {
+    background: url('https://via.placeholder.com/1920x1080?text=IMS Engineering college') no-repeat center center fixed;
+    background-size: cover;
+    color: blue;
+}
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    border-bottom: 2px solid #007bff;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.btn-section {
+    margin: 30px 0;
+    text-align: center;
+}
+
+.btn-section button {
+    margin: 10px;
+    font-size: 1.2rem;
+    border-radius: 10px;
+}
+
+.card {
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.card-title {
+    font-weight: bold;
+}
+
+.list-group-item {
+    background-color: rgba(255, 255, 255, 0.1);
+    border: none;
+    color: #ffffff;
+}
+
+input.form-control {
+    background-color: rgba(255, 255, 255, 0.2);
+    border: 1px solid #007bff;
+    color: #ffffff;
+}
+
+input.form-control::placeholder {
+    color: #cccccc;
+}
+
+table {
+    background-color: rgba(0, 0, 0, 0.6);
+    color: #ffffff;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #007bff;
+}
+
+th {
+    background-color: #007bff;
+}
+
+.content-section {
+    display: none;
+    margin-top: 20px;
+}
+
+.active-section {
+    display: block;
+}
