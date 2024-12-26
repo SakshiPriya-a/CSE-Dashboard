@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSE Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('https://via.placeholder.com/1920x1080?text=IMS Engineering college') no-repeat center center fixed;
+            background-size: cover;
+            color: #f6f6f9;
+        }
+        .navbar {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-bottom: 2px solid #007bff;
+        }
+        .navbar-brand {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+        .btn-section {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .btn-section button {
+            margin: 10px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+        }
+        .card {
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .list-group-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #ffffff;
+        }
+        input.form-control {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: 1px solid #007bff;
+            color: #ffffff;
+        }
+        input.form-control::placeholder {
+            color: #cccccc;
+        }
+        table {
+            background-color: rgba(0, 0, 0, 0.6);
+            color: #ffffff;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #007bff;
+        }
+        th {
+            background-color: #007bff;
+        }
+        .content-section {
+            display: none;
+            margin-top: 20px;
+        }
+        .active-section {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-center w-100">
+                <a class="navbar-brand" href="#">CSE Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="btn-section">
+            <button class="btn btn-primary" onclick="showSection('timetable')">Time Table Generator</button>
+            <button class="btn btn-secondary" onclick="showSection('quora')">Q&A Platform</button>
+            <button class="btn btn-success" onclick="showSection('chatbot')">Chatbot</button>
+            <button class="btn btn-info" onclick="showSection('events')">Events</button>
+            <button class="btn btn-warning" onclick="showSection('faculty')">Faculty Availability</button>
+        </div>
+
+        <div id="timetable" class="content-section">
+            <h2>Time Table Generator</h2>
+            <div id="timetable-app"></div>
+        </div>
+
+        <div id="quora" class="content-section">
+            <h2>Q&A Platform</h2>
+            <div id="quora-app"></div>
+        </div>
+
+        <div id="chatbot" class="content-section">
+            <h2>Chatbot</h2>
+            <div id="chatbot-app"></div>
+        </div>
+
+        <div id="events" class="content-section">
+            <h2>Ongoing and Upcoming Events</h2>
+            <div id="events-app"></div>
+        </div>
+
+        <div id="faculty" class="content-section">
+            <h2>Faculty Availability</h2>
+            <div id="faculty-app"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const adminPassword = "sakshi29";
+
+        function TimeTable() {
+            const [teachers, setTeachers] = React.useState([{ name: "", day: "", time: "" }]);
+            const [timeTable, setTimeTable] = React.useState([]);
+
+            const handleInputChange = (index, field, value) => {
+                const updatedTeachers = [...teachers];
+                updatedTeachers[index][field] = value;
+                setTeachers(updatedTeachers);
+            };
+
+            const addTeacherInput = () => {
+                setTeachers([...teachers, { name: "", day: "", time: "" }]);
+            };
+
+            const deleteEntry = (index) => {
+                const password = prompt("Enter admin password to delete:");
+                if (password === adminPassword) {
+                    const updatedTable = [...timeTable];
+                    updatedTable.splice(index, 1);
+                    setTimeTable(updatedTable);
+                } else {
+                    alert("Incorrect password. Deletion canceled.");
+                }
+            };
+
+            const generateTimeTable = () => {
+                const generatedTable = teachers.map((teacher, index) => ({
+                    day: teacher.day,
+                    time: teacher.time,
+                    teacher: teacher.name,
+                }));
+                setTimeTable(generatedTable);
+            };
+
+            return (
+                <div className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Time Table Generator</h5>
+                        <div>
+                            {teachers.map((teacher, index) => (
+                                <div className="mb-3" key={index}>
+                                    <input
+                                        type="text"
+                                        className="form-control mb-2"
+                                        placeholder="Teacher's Name"
+                                        value={teacher.name}
+                                        onChange={(e) => handleInputChange(index, "name", e.target.value)}
+                                    />
+                                    <input
+                                        type="text"
+                                        className="form-control mb-2"
+                                        placeholder="Day (e.g., Monday)"
+                                        value={teacher.day}
+                                        onChange={(e) => handleInputChange(index, "day", e.target.value)}
+                                    />
+                                    <input
+                                        type="text"
+                                        className="form-control mb-2"
+                                        placeholder="Time (e.g., 10:00 AM)"
+                                        value={teacher.time}
+                                        onChange={(e) => handleInputChange(index, "time", e.target.value)}
+                                    />
+                                </div>
+                            ))}
+                            <button className="btn btn-secondary mb-3" onClick={addTeacherInput}>
+                                Add More
+                            </button>
+                            <button className="btn btn-primary" onClick={generateTimeTable}>
+                                Generate Time Table
+                            </button>
+                        </div>
+                        {timeTable.length > 0 && (
+                            <div>
+                                <h5 className="mt-4">Generated Time Table</h5>
+                                <table className="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Day</th>
+                                            <th>Time</th>
+                                            <th>Teacher</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {timeTable.map((entry, index) => (
+                                            <tr key={index}>
+                                                <td>{entry.day}</td>
+                                                <td>{entry.time}</td>
+                                                <td>{entry.teacher}</td>
+                                                <td>
+                                                    <button
+                                                        className="btn btn-danger btn-sm"
+                                                        onClick={() => deleteEntry(index)}
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            );
+        }
+
+        function QandAPlatform() {
+            const [questions, setQuestions] = React.useState([
+                {
+                    question: "What are the library hours?",
+                    answers: ["The library is open from 8 AM to 8 PM on weekdays."]
+                },
+                {
+                    question: "How can I register for the upcoming hackathon?",
+                    answers: ["You can register through the college portal under the Events section."]
+                }
+            ]);
+            const [newQuestion, setNewQuestion] = React.useState("");
+
+            const addQuestion = () => {
+                if (newQuestion.trim()) {
+                    setQuestions([...questions, { question: newQuestion, answers: [] }]);
+                    setNewQuestion("");
+                }
+            };
+            const deleteQuestion = (index) => {
+        const password = prompt("Enter admin password to delete:");
+        if (password === adminPassword) {
+            const updatedQuestions = [...questions];
+            updatedQuestions.splice(index, 1);
+            setQuestions(updatedQuestions);
+        } else {
+            alert("Incorrect password. Deletion canceled.");
+        }
+    };
+
+            const addAnswer = (index, answer) => {
+                if (answer.trim()) {
+                    const updatedQuestions = [...questions];
+                    updatedQuestions[index].answers.push(answer);
+                    setQuestions(updatedQuestions);
+                }
+            };
+            return (
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Q&A Platform</h5>
+                <input
+                    type="text"
+                    className="form-control mb-3"
+                    placeholder="Ask a question"
+                    value={newQuestion}
+                    onChange={(e) => setNewQuestion(e.target.value)}
+                />
+                <button className="btn btn-primary mb-3" onClick={addQuestion}>
+                    Submit Question
+                </button>
+                <ul className="list-group">
+                    {questions.map((q, index) => (
+                        <li key={index} className="list-group-item">
+                            <div className="d-flex justify-content-between align-items-center">
+                                <strong>{q.question}</strong>
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => deleteQuestion(index)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                            <ul>
+                                {q.answers.map((a, aIndex) => (
+                                    <li key={aIndex}>{a}</li>
+                                ))}
+                            </ul>
+                            <input
+                                type="text"
+                                className="form-control mt-2"
+                                placeholder="Write an answer"
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                        addAnswer(index, e.target.value);
+                                        e.target.value = "";
+                                    }
+                                }}
+                            />
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
+        // function Chatbot() {
+        //     const [messages, setMessages] = React.useState([]);
+        //     const [input, setInput] = React.useState("");
+
+        //     const sendMessage = () => {
+        //         if (input.trim()) {
+        //             const userMessage = { sender: "User", text: input };
+        //             const botMessage = { sender: "Bot", text: `You said: ${input}` };
+
+        //             setMessages([...messages, userMessage, botMessage]);
+        //             setInput("");
+        //         }
+        //     };
+
+        function Chatbot() {
+            const [messages, setMessages] = React.useState([]);
+            const [input, setInput] = React.useState("");
+
+            const handleSendMessage = () => {
+                if (input.trim() !== "") {
+                    let response;
+                    if (input.toLowerCase().includes("events")) {
+                        response = "You can find all upcoming events in the Events section of the dashboard.";
+                    } else if (input.toLowerCase().includes("canteen")) {
+                        response = "The canteen serves food from 9 AM to 6 PM.";
+                    } else if (input.toLowerCase().includes("courses")) {
+                        response = "You can view your courses and syllabus on the college portal.";
+                    } 
+                    else if (input.toLowerCase().includes("class timimg")) {
+                        response = "class timimg usually from 8:50 to 4:30,saturday & usually off and for final year it vary.";
+                    }
+                    else if (input.toLowerCase().includes("hi")) {
+                        response = "Hello.";
+                    }
+                    else if (input.toLowerCase().includes("hello")) {
+                        response = "Hello.";
+                    }
+
+                    else {
+                        response = "I'm not sure about that. Please check the college website or contact admin.";
+                    }
+
+                    const newMessages = [...messages, { sender: "User", text: input }, { sender: "Bot", text: response }];
+                    setMessages(newMessages);
+                    setInput("");
+                }
+            };
+
+        //     return (
+        //         <div className="card">
+        //             <div className="card-body">
+        //                 <h5 className="card-title">Chatbot</h5>
+        //                 <div className="chat-window mb-3" style={{ maxHeight: "300px", overflowY: "scroll" }}>
+        //                     {messages.map((msg, index) => (
+        //                         <div key={index} style={{ textAlign: msg.sender === "User" ? "right" : "left" }}>
+        //                             <strong>{msg.sender}: </strong>{msg.text}
+        //                         </div>
+        //                     ))}
+        //                 </div>
+        //                 <input
+        //                     type="text"
+        //                     className="form-control mb-2"
+        //                     placeholder="Type your message"
+        //                     value={input}
+        //                     onChange={(e) => setInput(e.target.value)}
+        //                     onKeyDown={(e) => {
+        //                         if (e.key === "Enter") {
+        //                             sendMessage();
+        //                         }
+        //                     }}
+        //                 />
+        //                 <button className="btn btn-primary" onClick={sendMessage}>
+        //                     Send
+        //                 </button>
+        //             </div>
+        //         </div>
+        //     );
+        // }
+        return (
+                <div className="card">
+                    <div className="card-body">
+                        <div style={{ maxHeight: "200px", overflowY: "auto", marginBottom: "10px" }}>
+                            {messages.map((msg, index) => (
+                                <div key={index}>
+                                    <strong>{msg.sender}:</strong> {msg.text}
+                                </div>
+                            ))}
+                        </div>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Type your message..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                        />
+                        <button className="btn btn-success mt-2" onClick={handleSendMessage}>Send</button>
+                    </div>
+                </div>
+            );
+        }
+
+        function Events() {
+    const [events, setEvents] = React.useState([
+        { name: "Tech Fest", date: "2024-12-30" },
+        { name: "Hackathon", date: "2025-01-15" }
+    ]);
+    const [newEvent, setNewEvent] = React.useState({ name: "", date: "" });
+
+    const addEvent = () => {
+        if (newEvent.name.trim() && newEvent.date.trim()) {
+            setEvents([...events, newEvent]);
+            setNewEvent({ name: "", date: "" });
+        }
+    };
+
+    const deleteEvent = (index) => {
+        const password = prompt("Enter admin password to delete:");
+        if (password === adminPassword) {
+            const updatedEvents = [...events];
+            updatedEvents.splice(index, 1);
+            setEvents(updatedEvents);
+        } else {
+            alert("Incorrect password. Deletion canceled.");
+        }
+    };
+
+    return (
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Ongoing and Upcoming Events</h5>
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Event Name"
+                    value={newEvent.name}
+                    onChange={(e) => setNewEvent({ ...newEvent, name: e.target.value })}
+                />
+                <input
+                    type="date"
+                    className="form-control mb-2"
+                    value={newEvent.date}
+                    onChange={(e) => setNewEvent({ ...newEvent, date: e.target.value })}
+                />
+                <button className="btn btn-primary mb-3" onClick={addEvent}>
+                    Add Event
+                </button>
+                <ul className="list-group">
+                    {events.map((event, index) => (
+                        <li key={index} className="list-group-item">
+                            <div className="d-flex justify-content-between align-items-center">
+                                {event.name} - {event.date}
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => deleteEvent(index)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
+function FacultyAvailability() {
+    const [faculty, setFaculty] = React.useState([
+        { name: "Dr. Smith", available: "10:00 AM - 12:00 PM" },
+        { name: "Prof. Johnson", available: "1:00 PM - 3:00 PM" }
+    ]);
+    const [newFaculty, setNewFaculty] = React.useState({ name: "", available: "" });
+
+    const addFaculty = () => {
+        if (newFaculty.name.trim() && newFaculty.available.trim()) {
+            setFaculty([...faculty, newFaculty]);
+            setNewFaculty({ name: "", available: "" });
+        }
+    };
+
+    const deleteFaculty = (index) => {
+        const password = prompt("Enter admin password to delete:");
+        if (password === adminPassword) {
+            const updatedFaculty = [...faculty];
+            updatedFaculty.splice(index, 1);
+            setFaculty(updatedFaculty);
+        } else {
+            alert("Incorrect password. Deletion canceled.");
+        }
+    };
+
+    return (
+        <div className="card">
+            <div className="card-body">
+                <h5 className="card-title">Faculty Availability</h5>
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Faculty Name"
+                    value={newFaculty.name}
+                    onChange={(e) => setNewFaculty({ ...newFaculty, name: e.target.value })}
+                />
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Availability (e.g., 10:00 AM - 12:00 PM)"
+                    value={newFaculty.available}
+                    onChange={(e) => setNewFaculty({ ...newFaculty, available: e.target.value })}
+                />
+                <button className="btn btn-primary mb-3" onClick={addFaculty}>
+                    Add Faculty
+                </button>
+                <ul className="list-group">
+                    {faculty.map((f, index) => (
+                        <li key={index} className="list-group-item">
+                            <div className="d-flex justify-content-between align-items-center">
+                                {f.name} - {f.available}
+                                <button
+                                    className="btn btn-danger btn-sm"
+                                    onClick={() => deleteFaculty(index)}
+                                >
+                                    Delete
+                                </button>
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
+}
+
+        function showSection(id) {
+            const sections = document.querySelectorAll(".content-section");
+            sections.forEach(section => section.classList.remove("active-section"));
+            document.getElementById(id).classList.add("active-section");
+        }
+
+        ReactDOM.render(<TimeTable />, document.getElementById("timetable-app"));
+        ReactDOM.render(<QandAPlatform />, document.getElementById("quora-app"));
+        ReactDOM.render(<Chatbot />, document.getElementById("chatbot-app"));
+        ReactDOM.render(<Events />, document.getElementById("events-app"));
+        ReactDOM.render(<FacultyAvailability />, document.getElementById("faculty-app"));
+    </script>
+</body>
+</html>
+
