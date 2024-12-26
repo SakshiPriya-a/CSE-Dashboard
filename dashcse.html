@@ -486,15 +486,15 @@
 
 function FacultyAvailability() {
     const [faculty, setFaculty] = React.useState([
-        { name: "Dr. Smith", available: "10:00 AM - 12:00 PM" },
-        { name: "Prof. Johnson", available: "1:00 PM - 3:00 PM" }
+        { name: "Dr. Smith", available: "10:00 AM - 12:00 PM",cabin: "101",floor:"1st",block:"A" },
+        { name: "Prof. Johnson", available: "1:00 PM - 3:00 PM" , cabin: "202", floor: "2nd", block: "B"}
     ]);
-    const [newFaculty, setNewFaculty] = React.useState({ name: "", available: "" });
+    const [newFaculty, setNewFaculty] = React.useState({ name: "", available: "",cabin:"" ,floor:"",block:""});
 
     const addFaculty = () => {
         if (newFaculty.name.trim() && newFaculty.available.trim()) {
             setFaculty([...faculty, newFaculty]);
-            setNewFaculty({ name: "", available: "" });
+            setNewFaculty({ name: "", available: "",cabin:"" ,floor:"",block:"" });
         }
     };
 
@@ -527,6 +527,35 @@ function FacultyAvailability() {
                     value={newFaculty.available}
                     onChange={(e) => setNewFaculty({ ...newFaculty, available: e.target.value })}
                 />
+                <input
+                    type="text"
+                    className="form-control mb-2"
+                    placeholder="Cabin Number"
+                    value={newFaculty.cabin}
+                    onChange={(e) => setNewFaculty({ ...newFaculty, cabin: e.target.value })}
+                />
+
+
+
+                <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Floor"
+                                value={newFaculty.floor}
+                                onChange={(e) =>setNewFaculty({ ...newFaculty, floor: e.target.value })}
+                />
+                <input
+                                type="text"
+                                className="form-control mb-2"
+                                placeholder="Block"
+                                value={newFaculty.block}
+                                onChange={(e) => setNewFaculty({ ...newFaculty, block: e.target.value })}
+                />
+
+
+
+
+
                 <button className="btn btn-primary mb-3" onClick={addFaculty}>
                     Add Faculty
                 </button>
@@ -534,7 +563,7 @@ function FacultyAvailability() {
                     {faculty.map((f, index) => (
                         <li key={index} className="list-group-item">
                             <div className="d-flex justify-content-between align-items-center">
-                                {f.name} - {f.available}
+                                {f.name} - timing-{f.available}-canin no- {f.cabin}-floor- {f.floor}-block- {f.block}
                                 <button
                                     className="btn btn-danger btn-sm"
                                     onClick={() => deleteFaculty(index)}
